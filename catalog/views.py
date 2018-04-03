@@ -13,6 +13,9 @@ def index(request):
     num_tolkien_books = Book.objects.filter(author__last_name__contains ='tolkien').count()
     num_genres = Genre.objects.count()
 
+    num_visits = request.session.get('num_visits', 0)
+    request.session['num_visits'] = num_visits+1
+
     
     return render(
         request,
@@ -22,19 +25,20 @@ def index(request):
         		'num_instances_available':num_instances_available,
         		'num_authors':num_authors,
         		'num_tolkien_books':num_tolkien_books,
-        		'num_genres':num_genres},
+        		'num_genres':num_genres,
+                'num_visits':num_visits},
     )
 
 class BookListView(generic.ListView):
     model = Book
-    paginate_by = 2
+    paginate_by = 10
 
 class BookDetailView(generic.DetailView):
     model = Book
 
 class AuthorListView(generic.ListView):
     model = Author
-    paginate_by = 2
+    paginate_by = 10
 
 class AuthorDetailView(generic.DetailView):
     model = Author
