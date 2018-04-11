@@ -2,9 +2,11 @@ from django.shortcuts import render
 from .models import Book, Author, BookInstance, Genre
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.d
+@login_required
 def index(request):
     # Generate counts of some of the main objects
     num_books = Book.objects.all().count()
@@ -32,20 +34,24 @@ def index(request):
     )
 
 class BookListView(LoginRequiredMixin, generic.ListView):
-    login_url = '/login/'
+    login_url = 'accounts/login'
+    redirect_field_name = 'redirect_to'
     model = Book
     paginate_by = 10
 
 class BookDetailView(LoginRequiredMixin, generic.DetailView):
-    login_url = '/login/'
+    login_url = 'accounts/login'
+    redirect_field_name = 'redirect_to'
     model = Book
 
 class AuthorListView(LoginRequiredMixin, generic.ListView):
-    login_url = '/login/'
+    login_url = 'accounts/login'
+    redirect_field_name = 'redirect_to'
     model = Author
     paginate_by = 10
 
 class AuthorDetailView(LoginRequiredMixin, generic.DetailView):
-    login_url = '/login/'
+    login_url = 'accounts/login'
+    redirect_field_name = 'redirect_to'
     model = Author
 
