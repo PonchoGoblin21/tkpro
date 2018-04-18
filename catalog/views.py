@@ -3,6 +3,7 @@ from .models import Book, Author, BookInstance, Genre
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
@@ -80,6 +81,10 @@ class LoanedBooksByUserListView(LoginRequiredMixin,generic.ListView):
     def get_queryset(self):
         return BookInstance.objects.filter(borrower=self.request.user).filter(status__exact='o').order_by('due_back')
 
+class AllBorrowedBooks(generic.ListView):
+    model = BookInstance
+    #books_on_loan = model.objects.filter(status__exact='o')
+    template_name = 'catalog/all_borrowed_books.html'
 
 @permission_required('catalog.can_mark_returned')
 def renew_book_librarian(request, pk):
@@ -107,14 +112,17 @@ def renew_book_librarian(request, pk):
 
     return render(request, 'catalog/book_renew_librarian.html', {'form': form, 'bookinst':book_inst})
 
-class AuthorCreate(CreateView):
+class AuthorCreate(PermissionRequiredMixin, CreateView):
+    permission_required = ('catalog.can_mark_returned', 'catalog.can_edit')
     model = Author
     fields = '__all__'
 
-class AuthorUpdate(UpdateView):
+class AuthorUpdate(PermissionRequiredMixin, UpdateView):
+    permission_required = ('catalog.can_mark_returned', 'catalog.can_edit')
     model = Author
     fields = ['first_name','last_name','date_of_birth','date_of_death']
 
-class AuthorDelete(DeleteView):
+class AuthorDelete(PermissionRequiredMixin, DeleteView):
+    permission_required = ('catalog.can_mark_returned', 'catalog.can_edit')
     model = Author
     success_url = reverse_lazy('authors')
