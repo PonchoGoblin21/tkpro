@@ -86,11 +86,11 @@ class AllBorrowedBooks(generic.ListView):
     template_name = 'catalog/all_borrowed_books.html'
 
     def get_queryset(self):
-        return BookInstance.objects.filter(status__exact='o').exclude(borrower=1)
+        return BookInstance.objects.filter(status__exact='o')
 
 @permission_required('catalog.can_mark_returned')
 def renew_book_librarian(request, pk):
-    book_inst=get_object_or_404(BookInstance, pk = pk)
+    book_inst = get_object_or_404(BookInstance, pk = pk)
 
     # If this is a POST request then process the Form data
     if request.method == 'POST':
@@ -105,7 +105,7 @@ def renew_book_librarian(request, pk):
             book_inst.save()
 
             # redirect to a new URL:
-            return HttpResponseRedirect(reverse('/') )
+            return HttpResponseRedirect(reverse('all_borrowed_books') )
 
     # If this is a GET (or any other method) create the default form.
     else:
