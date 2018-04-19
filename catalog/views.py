@@ -83,8 +83,10 @@ class LoanedBooksByUserListView(LoginRequiredMixin,generic.ListView):
 
 class AllBorrowedBooks(generic.ListView):
     model = BookInstance
-    #books_on_loan = model.objects.filter(status__exact='o')
     template_name = 'catalog/all_borrowed_books.html'
+
+    def get_queryset(self):
+        return BookInstance.objects.filter(status__exact='o').exclude(borrower=1)
 
 @permission_required('catalog.can_mark_returned')
 def renew_book_librarian(request, pk):
