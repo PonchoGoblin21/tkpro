@@ -7,8 +7,9 @@ import datetime #for checking renewal date range.
 class RenewBookForm(forms.Form):
     renewal_date = forms.DateField(help_text="Enter a date between now and 4 weeks (default 3).")
 
+    #Custom sanitization of date field input. Server side validation.
     def clean_renewal_date(self):
-        data = self.cleaned_data['renewal_date']
+        data = self.cleaned_data['renewal_date'] #Sanitized renewal date input info (from django)
         
         #Check date is not in past. 
         if data < datetime.date.today():
@@ -18,5 +19,5 @@ class RenewBookForm(forms.Form):
         if data > datetime.date.today() + datetime.timedelta(weeks=4):
             raise ValidationError(_('Invalid date - renewal more than 4 weeks ahead'))
 
-        # Remember to always return the cleaned data.
+        #return the cleaned data.
         return data
