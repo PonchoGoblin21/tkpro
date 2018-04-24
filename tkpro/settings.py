@@ -21,7 +21,7 @@ SECRET_KEY = '+i4_8c%vfbx3o=osn#$glw0*+4o!9s*)!zdwk=)t@#n67m7tsq'
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['www.taraslibrary.com']
 
 
 # Application definition
@@ -54,6 +54,7 @@ CORS_ORIGIN_WHITELIST = (
     'hostname.example.com',
     'localhost:8000',
     '127.0.0.1:9000'
+    'www.taraslibrary.com:8000'
 )
 
 ROOT_URLCONF = 'tkpro.urls'
